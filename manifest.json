@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Session Manager (Ungrouped Support)",
+  "version": "1.0",
+  "description": "Save and restore tab sessions including true ungrouped tabs, with JSON import/export",
+  "permissions": [
+    "tabs",
+    "tabGroups",
+    "storage",
+    "downloads"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tab Session Manager"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
