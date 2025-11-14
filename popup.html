@@ -1,45 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Tab Session Manager</title>
-  <style>
-    body {
-      width: 280px;
-      font-family: Arial, sans-serif;
-      padding: 10px;
-    }
-    button {
-      width: 100%;
-      padding: 8px;
-      margin: 5px 0;
-      font-size: 14px;
-    }
-    .session {
-      border: 1px solid #ccc;
-      padding: 8px;
-      border-radius: 6px;
-      margin-top: 8px;
-    }
-    .session-title {
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-    .session-btns button {
-      width: 48%;
-      margin: 2px 1%;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Tab Session Manager</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  width: 320px;
+  padding: 12px;
+  background: #fff;
+  color: #333;
+}
+
+h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  text-align: center;
+}
+
+#topButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+#topButtons button {
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#saveBtn { background: #007bff; color: #fff; }
+#saveBtn:hover { background: #0056b3; }
+
+#exportBtn { background: #6c757d; color: #fff; }
+#exportBtn:hover { background: #5a6268; }
+
+#importBtn { background: #17a2b8; color: #fff; }
+#importBtn:hover { background: #117a8b; }
+
+#sessionList {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.session-card {
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.session-title {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.session-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.session-buttons button {
+  flex: 1;
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.openSession { background: #28a745; color: #fff; }
+.openSession:hover { background: #218838; }
+
+.deleteSession { background: #dc3545; color: #fff; }
+.deleteSession:hover { background: #c82333; }
+
+.group-label {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 11px;
+  border-radius: 4px;
+  color: #fff;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+</style>
 </head>
 <body>
 
+<h2>Tab Session Manager</h2>
+
+<div id="topButtons">
   <button id="saveBtn">Save Current Session</button>
-  <button id="exportBtn">Export Sessions (JSON)</button>
-  <button id="importBtn">Import Sessions (JSON)</button>
+  <button id="exportBtn">Export Sessions</button>
+  <button id="importBtn">Import Sessions</button>
+</div>
 
-  <h3>Saved Sessions</h3>
-  <div id="sessionList"></div>
+<div id="sessionList" class="scrollbar"></div>
 
-  <script src="popup.js"></script>
+<script src="popup.js"></script>
 </body>
 </html>
