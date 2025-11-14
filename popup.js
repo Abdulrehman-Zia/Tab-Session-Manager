@@ -13,8 +13,12 @@ saveTabs.addEventListener('click', async () => {
     // Get all tabs in current window
     const tabs = await chrome.tabs.query({ currentWindow: true });
     
-    // Extract URLs from tabs
-    const urls = tabs.map(tab => tab.url).filter(url => url && !url.startsWith('chrome://'));
+    // Extract URLs from tabs, filtering out internal and unsafe URLs
+    const urls = tabs.map(tab => tab.url).filter(url => {
+      if (!url || typeof url !== 'string') return false;
+      // Only include http, https, and ftp URLs
+      return url.startsWith('http://') || url.startsWith('https://') || url.startsWith('ftp://');
+    });
     
     if (urls.length === 0) {
       showStatus('No valid tabs to save', 'error');
@@ -46,6 +50,9 @@ saveTabs.addEventListener('click', async () => {
       saveAs: true
     });
     
+    // Clean up the blob URL
+    URL.revokeObjectURL(url);
+    
     showStatus(`✓ Saved ${urls.length} tabs to ${filename}`, 'success');
     
   } catch (error) {
@@ -75,12 +82,23 @@ loadTabs.addEventListener('click', () => {
         throw new Error('Invalid file format');
       }
       
+      // Validate and filter URLs
+      const validUrls = data.urls.filter(url => {
+        if (!url || typeof url !== 'string') return false;
+        // Only allow http, https, and ftp protocols
+        return url.startsWith('http://') || url.startsWith('https://') || url.startsWith('ftp://');
+      });
+      
+      if (validUrls.length === 0) {
+        throw new Error('No valid URLs found in file');
+      }
+      
       // Open all tabs
-      for (const url of data.urls) {
+      for (const url of validUrls) {
         await chrome.tabs.create({ url: url, active: false });
       }
       
-      showStatus(`✓ Loaded ${data.urls.length} tabs`, 'success');
+      showStatus(`✓ Loaded ${validUrls.length} tabs`, 'success');
       updateTabCount();
       
     } catch (error) {
@@ -109,7 +127,10 @@ function showStatus(message, type) {
 async function updateTabCount() {
   try {
     const tabs = await chrome.tabs.query({ currentWindow: true });
-    const validTabs = tabs.filter(tab => tab.url && !tab.url.startsWith('chrome://'));
+    const validTabs = tabs.filter(tab => {
+      if (!tab.url || typeof tab.url !== 'string') return false;
+      return tab.url.startsWith('http://') || tab.url.startsWith('https://') || tab.url.startsWith('ftp://');
+    });
     tabCountDiv.textContent = `Currently ${validTabs.length} tab${validTabs.length !== 1 ? 's' : ''} open`;
   } catch (error) {
     console.error('Error getting tab count:', error);
